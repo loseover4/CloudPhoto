@@ -1,0 +1,9 @@
+package com.now.cloudphoto.utilities;
+
+public class Constants {
+	public static final String LOG_TAG = "CloudPhoto";
+	
+	public static final int CLOUDSERVICE_STATUS_RUNNING = 0;
+	public static final int CLOUDSERVICE_STATUS_FINISHED = 1;
+	public static final int CLOUDSERVICE_STATUS_ERROR = 2;
+}
