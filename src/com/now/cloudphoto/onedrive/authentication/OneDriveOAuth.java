@@ -1,13 +1,9 @@
 package com.now.cloudphoto.onedrive.authentication;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,15 +11,12 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
-import android.text.method.DateTimeKeyListener;
 import android.util.Log;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.now.cloudphoto.CloudApplication;
 import com.now.cloudphoto.onedrive.OneDriveConstant;
 import com.now.cloudphoto.service.RestServices;
+import com.now.cloudphoto.utilities.Constants;
 
 public class OneDriveOAuth {
 	private String accessTokens = null;
@@ -76,7 +69,10 @@ public class OneDriveOAuth {
 		boolean status = false;
 		loadTokens();
 		
-		if(accessTokens == null){
+		if(isTokensExpired()){
+			return refreshTokens();
+		}
+		else if(accessTokens == null){
 			signInError = null;
 			if(url.contains(callbackUrl)){
 				String [] splits = url.split("code=");
@@ -100,9 +96,6 @@ public class OneDriveOAuth {
 				}
 			}
 		}
-		else if(isTokensExpired()){
-			return refreshTokens();
-		}
 		else{
 			status = true;
 		}
@@ -116,7 +109,7 @@ public class OneDriveOAuth {
 	}
 	
 	public boolean isSignInSuccessful(){
-		return accessTokens != null;
+		return accessTokens != null && isTokensExpired() == false;
 	}
 	
 	public String getSignInError(){
@@ -124,6 +117,7 @@ public class OneDriveOAuth {
 	}
 	
 	public boolean refreshTokens(){
+		Log.d(Constants.LOG_TAG, "refreshTokens");
 		boolean status = true;
 		//new RefreshAccessTokensTask().execute();		
 		List<NameValuePair> data = new ArrayList<NameValuePair>(2);
@@ -185,8 +179,10 @@ public class OneDriveOAuth {
 		expireTimeStamp = prefs.getLong("expireTimeStamp", -1);
 	}
 	
-	private boolean isTokensExpired(){
+	public boolean isTokensExpired(){
 		long currentTimeStamp= System.currentTimeMillis()/1000;
+		Log.d(Constants.LOG_TAG, "currentTimeStamp: " + currentTimeStamp);
+		Log.d(Constants.LOG_TAG, "expireTimeStamp: " + expireTimeStamp);
 		return (currentTimeStamp > expireTimeStamp);
 	}
 	

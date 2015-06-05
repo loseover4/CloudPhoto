@@ -10,6 +10,7 @@ import android.webkit.WebViewClient;
 
 import com.now.cloudphoto.R;
 import com.now.cloudphoto.onedrive.authentication.OneDriveOAuth;
+import com.now.cloudphoto.utilities.Constants;
 
 public class SignInActivity extends Activity {
 
@@ -34,7 +35,11 @@ public class SignInActivity extends Activity {
 			}
 		});
 		
-		if(mOneDriveOAuth.isSignInSuccessful() == true){
+		if(mOneDriveOAuth.isSignInSuccessful()){
+			goToHomeActivity();
+		}
+		else if (mOneDriveOAuth.isTokensExpired()){
+			mOneDriveOAuth.refreshTokens();
 			goToHomeActivity();
 		}
 		else{

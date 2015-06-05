@@ -48,10 +48,11 @@ public class DrivesFragment extends Fragment {
 		
 		Drive[] drives = mOneDriveServices.getDrives();		
 		final List<BrowseListItemDataModel> listItems = new ArrayList<BrowseListItemDataModel>();
-		for(int i = 0 ; i < drives.length; i++){
-			listItems.add(new BrowseListItemDataModel(drives[i].getId(), drives[i].getDriveType(), false));
+		if(drives !=  null){
+			for(int i = 0 ; i < drives.length; i++){
+				listItems.add(new BrowseListItemDataModel(drives[i].getId(), drives[i].getDriveType(), false));
+			}
 		}
-		
 		drivesListView = (ListView) rootView.findViewById(R.id.listview_drives);		
 		final ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listItems);
 		drivesListView.setAdapter(adapter);		

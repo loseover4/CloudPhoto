@@ -1,24 +1,16 @@
 package com.now.cloudphoto.activities;
 
-import com.now.cloudphoto.R;
-import com.now.cloudphoto.R.id;
-import com.now.cloudphoto.R.layout;
-import com.now.cloudphoto.R.menu;
-import com.now.cloudphoto.fragments.ViewerWebViewFragment;
-import com.now.cloudphoto.utilities.Constants;
-
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+
+import com.now.cloudphoto.R;
+import com.now.cloudphoto.fragments.PhotoViewerFragment;
+import com.now.cloudphoto.fragments.ViewerWebViewFragment;
+import com.now.cloudphoto.utilities.Constants;
 
 public class ViewerActivity extends Activity {
 
@@ -34,14 +26,20 @@ public class ViewerActivity extends Activity {
 
 			Log.d(Constants.LOG_TAG, "ViewerActivity type: "+ type);
 			//Create new fragment and add url to that fragment
-			ViewerWebViewFragment mViewerWebViewFragment = new ViewerWebViewFragment();
+//			ViewerWebViewFragment mViewerWebViewFragment = new ViewerWebViewFragment();
+//			Bundle args = new Bundle();
+//			args.putString("url", url);
+//			args.putString("type", type);
+//			mViewerWebViewFragment.setArguments(args);
+			
+			PhotoViewerFragment mPhotoViewerFragment = new PhotoViewerFragment();
 			Bundle args = new Bundle();
 			args.putString("url", url);
-			args.putString("type", type);
-			mViewerWebViewFragment.setArguments(args);
+			mPhotoViewerFragment.setArguments(args);
 			
 			//Start new Viewer fragment
-			getFragmentManager().beginTransaction().add(R.id.viewer_fragment_container,mViewerWebViewFragment).commit();		
+			//getFragmentManager().beginTransaction().add(R.id.viewer_fragment_container,mViewerWebViewFragment).commit();
+			getFragmentManager().beginTransaction().add(R.id.viewer_fragment_container, mPhotoViewerFragment).commit();
 		}
 	}
 

@@ -95,14 +95,14 @@ public class BrowseFragment extends Fragment {
 					Log.d(Constants.LOG_TAG, "web Url: "+ file.getContentDownloadUrl());
 					
 					//Start Viewer activity
-//					Intent myIntent = new Intent(getActivity(),ViewerActivity.class);
-//					myIntent.putExtra("url", file.getContentDownloadUrl());
-//					myIntent.putExtra("type", file.getFile().getMimetype());
-//					Log.d(Constants.LOG_TAG, "file.getFile().getMimetype(): "+ file.getFile().getMimetype());
-//					startActivity(myIntent);					
+					Intent myIntent = new Intent(getActivity(),ViewerActivity.class);
+					myIntent.putExtra("url", file.getContentDownloadUrl());
+					myIntent.putExtra("type", file.getFile().getMimetype());
+					Log.d(Constants.LOG_TAG, "file.getFile().getMimetype(): "+ file.getFile().getMimetype());
+					startActivity(myIntent);					
 
-					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(file.getContentDownloadUrl()));
-					startActivity(browserIntent);
+//					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(file.getContentDownloadUrl()));
+//					startActivity(browserIntent);
 				}
 			}
 		});

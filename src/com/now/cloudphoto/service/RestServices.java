@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.now.cloudphoto.onedrive.OneDriveConstant;
+import com.now.cloudphoto.utilities.Constants;
 
 public class RestServices {	
 	
