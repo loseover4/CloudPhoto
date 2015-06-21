@@ -24,6 +24,7 @@ public class Item {
 	private Folder folder;
 	private File file;
 	private Image image;
+	private Thumbnails[] thumbnails;
 	
 	public Item(){
 		
@@ -171,5 +172,13 @@ public class Item {
 
 	public void setImage(Image image) {
 		this.image = image;
+	}
+
+	public Thumbnails[] getThumbnails() {
+		return thumbnails;
+	}
+
+	public void setThumbnails(Thumbnails[] thumbnails) {
+		this.thumbnails = thumbnails;
 	}		
 }

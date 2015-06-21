@@ -1,8 +1,6 @@
 package com.now.cloudphoto.fragments;
 
 import android.app.Fragment;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +21,7 @@ public class PhotoViewerFragment  extends Fragment{
 		String url = agrs.getString("url");	
 		
 		PhotoViewer mPhotoViewer = (PhotoViewer) rootView.findViewById(R.id.photo_viewer);
-		DisplayImageFromUrl mDisplayImageFromUrl = new DisplayImageFromUrl(mPhotoViewer);
-		mDisplayImageFromUrl.execute(url);
+		new DisplayImageFromUrl(mPhotoViewer).execute(url);
 	
 		return rootView;
 	}

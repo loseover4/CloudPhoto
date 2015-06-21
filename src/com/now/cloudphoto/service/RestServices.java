@@ -1,7 +1,13 @@
 package com.now.cloudphoto.service;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -34,19 +40,36 @@ public class RestServices {
 	}
 	
 	public String sendGetRequest(String url) throws IOException{
-		HttpClient httpclient = new DefaultHttpClient();
-	    HttpResponse response = httpclient.execute(new HttpGet(url));
-	    StatusLine statusLine = response.getStatusLine();
-	    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
-	        ByteArrayOutputStream out = new ByteArrayOutputStream();
-	        response.getEntity().writeTo(out);
-	        String responseString = out.toString();
-	        out.close();
-	        return responseString;
-	    } else{
-	        response.getEntity().getContent().close();
-	        throw new IOException(statusLine.getReasonPhrase());
+//		HttpClient httpclient = new DefaultHttpClient();
+//	    HttpResponse response = httpclient.execute(new HttpGet(url));
+//	    StatusLine statusLine = response.getStatusLine();
+//	    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+//	        ByteArrayOutputStream out = new ByteArrayOutputStream();
+//	        response.getEntity().writeTo(out);
+//	        String responseString = out.toString();
+//	        out.close();
+//	        return responseString;
+//	    } else{
+//	        response.getEntity().getContent().close();
+//	        throw new IOException(statusLine.getReasonPhrase());
+//	    }
+
+		Log.d("CloudPhoto", "url in RestService: "+ url);
+	    URL urlObj = new URL(url);
+	    HttpURLConnection httpUrlConnection = (HttpURLConnection) urlObj.openConnection();
+	    httpUrlConnection.setRequestMethod("GET");
+	    httpUrlConnection.setUseCaches (true);
+
+	    InputStream responseStream = new BufferedInputStream(httpUrlConnection.getInputStream());
+	    BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
+	    String line = "";
+	    StringBuilder stringBuilder = new StringBuilder();
+	    while ((line = responseStreamReader.readLine()) != null) {
+	        stringBuilder.append(line);
 	    }
+	    responseStreamReader.close();
+	    
+	    return stringBuilder.toString();
 	}
 	
 	public String sendPostRequestAsync(String url, String contentType,
@@ -57,6 +80,7 @@ public class RestServices {
 	
 	public String sendPostRequest(String url, String contentType,
 			List<NameValuePair> nameValuePairs) throws ClientProtocolException, IOException{
+		//TODO: Convert to HttpURLConnection or not. Research
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost = new HttpPost(url);
 		httppost.setHeader(HTTP.CONTENT_TYPE, contentType);

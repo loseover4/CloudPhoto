@@ -1,22 +1,18 @@
 package com.now.cloudphoto.adapters;
 
-import java.io.InputStream;
 import java.util.List;
 
-import com.now.cloudphoto.R;
-import com.now.cloudphoto.models.BrowseListItemDataModel;
-
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.now.cloudphoto.R;
+import com.now.cloudphoto.models.BrowseListItemDataModel;
+import com.squareup.picasso.Picasso;
 
 public class BrowseListAdapter extends ArrayAdapter<BrowseListItemDataModel> {
 
@@ -46,7 +42,10 @@ public class BrowseListAdapter extends ArrayAdapter<BrowseListItemDataModel> {
             TextView mSubtitle = (TextView) mView.findViewById(R.id.subtitle_list_item);
 
             if (mThumbnail != null && item.getThumbnailUrl()!= null) {
-            	new DownloadImageTask(mThumbnail).execute(item.getThumbnailUrl());
+            	Picasso.with(getContext()).load(item.getThumbnailUrl()).into(mThumbnail);
+            }
+            else{
+            	Picasso.with(getContext()).load(R.drawable.bluesquare).into(mThumbnail);
             }
 
             if (mTitle != null) {
@@ -60,28 +59,29 @@ public class BrowseListAdapter extends ArrayAdapter<BrowseListItemDataModel> {
 
         return mView;
     }
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
+//    
+//    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+//        ImageView bmImage;
+//
+//        public DownloadImageTask(ImageView bmImage) {
+//            this.bmImage = bmImage;
+//        }
+//
+//        protected Bitmap doInBackground(String... urls) {
+//            String urldisplay = urls[0];
+//            Bitmap mIcon11 = null;
+//            try {
+//                InputStream in = new java.net.URL(urldisplay).openStream();
+//                mIcon11 = BitmapFactory.decodeStream(in);
+//            } catch (Exception e) {
+//                Log.e("Error", e.getMessage());
+//                e.printStackTrace();
+//            }
+//            return mIcon11;
+//        }
+//
+//        protected void onPostExecute(Bitmap result) {
+//            bmImage.setImageBitmap(result);
+//        }
+//    }
 }

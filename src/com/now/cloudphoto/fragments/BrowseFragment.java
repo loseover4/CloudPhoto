@@ -22,6 +22,7 @@ import com.now.cloudphoto.R;
 import com.now.cloudphoto.activities.ViewerActivity;
 import com.now.cloudphoto.adapters.BrowseListAdapter;
 import com.now.cloudphoto.models.BrowseListItemDataModel;
+import com.now.cloudphoto.onedrive.manager.UrlManager;
 import com.now.cloudphoto.onedrive.model.json.Item;
 import com.now.cloudphoto.onedrive.model.json.Thumbnails;
 import com.now.cloudphoto.onedrive.services.OneDriveServices;
@@ -30,7 +31,6 @@ import com.now.cloudphoto.utilities.Util;
 
 public class BrowseFragment extends Fragment {
 	private OneDriveServices mOneDriveServices;
-	private Stack<List<BrowseListItemDataModel>> historyStack;
 	
 	private ListView browseListView;
 	private List<BrowseListItemDataModel> browseListItems;
@@ -45,16 +45,13 @@ public class BrowseFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_browse, container, false);			
 		mOneDriveServices = new OneDriveServices();	
 		browseListView = (ListView) rootView.findViewById(R.id.listview_browse);
-		historyStack = new Stack<List<BrowseListItemDataModel>>();
 		
 		//Get agrs
 		Bundle agrs = getArguments();
 		if(agrs != null){
 			String parentId = getArguments().getString("parentId");
 			boolean isFromDrive = getArguments().getBoolean("isFromDrive");
-			if(parentId != null){
-				updateBrowseList(isFromDrive, parentId);
-			}
+			updateBrowseList(isFromDrive, parentId);
 		}		
 		
 		return rootView;
@@ -79,15 +76,11 @@ public class BrowseFragment extends Fragment {
 					int position, long id) {
 				BrowseListItemDataModel selectedItem = (BrowseListItemDataModel) parent.getItemAtPosition(position);
 				
-				if(selectedItem.isFolder() == true){
-					//Add old itemlists to historyStack 
-					historyStack.push(new ArrayList<BrowseListItemDataModel>(browseListItems));					
-					
+				if(selectedItem.isFolder() == true){						
 					List<BrowseListItemDataModel> listChildren = getItemChildren(selectedItem.getId());
 					
-					browseListItems.clear();				
+					browseListItems.clear();			
 					browseListItems.addAll(listChildren);
-	
 					browseAdapter.notifyDataSetChanged();
 				}
 				else{
@@ -109,12 +102,12 @@ public class BrowseFragment extends Fragment {
 	}
 	
 	public boolean isAllowParentBack(){
-		return historyStack == null || historyStack.size() == 0;
+		return mOneDriveServices.isBackStackEmpty();
 	}
 	
 	public void goBack(){
 		browseListItems.clear();				
-		browseListItems.addAll(historyStack.pop());
+		browseListItems.addAll(getItemsFromBackStack());
 		browseAdapter.notifyDataSetChanged();
 	}
 	
@@ -128,17 +121,18 @@ public class BrowseFragment extends Fragment {
 		return getBrowseListItemDataModelList(items);
 	}
 	
+	private List<BrowseListItemDataModel> getItemsFromBackStack(){
+		Item[] items = mOneDriveServices.getItemsFromBackStack();
+		return getBrowseListItemDataModelList(items);
+	}
+	
 	private List<BrowseListItemDataModel> getBrowseListItemDataModelList(Item[] items){
-		OneDriveServices mOneDriveServices = new OneDriveServices();
 		List<BrowseListItemDataModel> listItems = new ArrayList<BrowseListItemDataModel>();
 		for(int i = 0 ; i < items.length; i++){
 			BrowseListItemDataModel model = new BrowseListItemDataModel(items[i].getId(), items[i].getName(), items[i].isFolder());
-//			if(items[i].isImage() == true){
-//				Thumbnails mThumbnails = mOneDriveServices.getItemThumbnail(items[i].getId());
-//				if(mThumbnails != null){
-//					model.setThumbnailUrl(mThumbnails.getSmall().getUrl());
-//				}
-//			}
+			if(items[i].isImage() == true && items[i].getThumbnails() != null && items[i].getThumbnails().length > 0){
+				model.setThumbnailUrl(items[i].getThumbnails()[0].getSmall().getUrl());
+			}
 			listItems.add(model);
 		}
 		return listItems;

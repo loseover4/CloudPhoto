@@ -16,7 +16,8 @@
         <ImageView
             android:id="@+id/thumbnail_image_list_item"
             android:layout_width="50dip"
-            android:layout_height="50dip"/>
+            android:layout_height="50dip"
+            android:src="@drawable/bluesquare"/>
  
     </LinearLayout>
  

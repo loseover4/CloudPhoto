@@ -1,6 +1,5 @@
 package com.now.cloudphoto.activities;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -14,7 +13,7 @@ import com.now.cloudphoto.fragments.BrowseFragment;
 import com.now.cloudphoto.fragments.DrivesFragment;
 import com.now.cloudphoto.fragments.DrivesFragment.OnDriveSelectedListener;
 
-public class HomeActivity extends Activity implements OnDriveSelectedListener{
+public class HomeActivity extends FragmentActivity implements OnDriveSelectedListener{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,14 +21,12 @@ public class HomeActivity extends Activity implements OnDriveSelectedListener{
 		setContentView(R.layout.activity_home);
 
 		if (savedInstanceState == null) {
-			//getFragmentManager().beginTransaction().add(R.id.container, new BrowseFragment()).commit();
 			getFragmentManager().beginTransaction().add(R.id.container, new DrivesFragment()).commit();
 		}		
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.home, menu);
 		return true;
